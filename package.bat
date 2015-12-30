@@ -1,1 +1,1 @@
-zip -0r bin-packing.zip binpacking haxelib.json include.xml
+zip -0r bin-packing.zip binpacking haxelib.json include.xml README.md CHANGELOG.md LICENSE
