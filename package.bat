@@ -1,0 +1,1 @@
+zip -0r bin-packing.zip binpacking haxelib.json include.xml
