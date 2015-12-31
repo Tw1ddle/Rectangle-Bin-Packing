@@ -17,8 +17,23 @@ Try the [demo](http://www.samcodes.co.uk/project/realtime-signed-distance-fields
 
 Basic usage example:
 
-```
-TODO
+```haxe
+var width:Int = 800;
+var height:Int = 400;
+var useWasteMap:Bool = true;
+
+var packer = new SkylinePack(width, height, useWasteMap);
+
+var rectWidth:Int = 20;
+var rectHeight:Int = 40;
+var heuristic:LevelChoiceHeuristic = LevelChoiceHeuristic.MinWasteFit;
+var rect:Rect = skylinePack.insert(rectWidth, rectHeight, heuristic);
+
+if(rect != null) {
+	trace("Failed to pack rect"); // Maybe time to start a new bin
+} else {
+	trace("Inserted rect at: " + Std.string(rect.x) + "," + Std.string(rect.y));
+}
 ```
 
 ## Install ##
@@ -42,7 +57,7 @@ Or add it to your ```Project.xml```:
 ![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing/blob/master/screenshots/screenshot2.png?raw=true "Bin Packing Algorithm screenshot 2")
 
 ## Notes ##
-* Many of the original algorithms are ported from public domain C++ implementations by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
-* For more information about the algorithms, see Jukka's [blog posts](http://clb.demon.fi/projects/even-more-rectangle-bin-packing) and [paper](http://clb.demon.fi/files/RectangleBinPack.pdf).
+* Most of the algorithms are ported from public domain C++ implementations by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
+* For details about the algorithms, see Jukka's [blog posts](http://clb.demon.fi/projects/even-more-rectangle-bin-packing) and [paper](http://clb.demon.fi/files/RectangleBinPack.pdf).
 * The haxelib supports every Haxe target, but has not been thoroughly tested or optimized for performance, especially on native targets.
 * If you have any questions or suggestions then [get in touch](http://samcodes.co.uk/contact).
