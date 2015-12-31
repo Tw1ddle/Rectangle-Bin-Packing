@@ -48,6 +48,7 @@ Or add it to your ```Project.xml```:
 ```
 
 ## Screenshots ##
+Screenshots of the [demo](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/):
 
 ![Screenshot](screenshots/screenshot1.png?raw=true "Bin Packing Algorithms screenshot 1")
 
