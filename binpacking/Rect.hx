@@ -15,12 +15,14 @@ class Rect {
 	public var y:Float;
 	public var width:Float;
 	public var height:Float;
+	public var flipped:Bool; // If a rect is flipped, then width and height are swapped and this is marked true
 	
-	public inline function new(x:Float = 0, y:Float = 0, width:Float = 0, height:Float = 0) {
+	public inline function new(x:Float = 0, y:Float = 0, width:Float = 0, height:Float = 0, flipped:Bool = false) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.flipped = flipped;
 	}
 	
 	public inline function clone():Rect {
@@ -32,6 +34,7 @@ class Rect {
 	}
 }
 
+// Helper/debug class for ensuring that a collection of rects are disjoint
 class DisjointRectCollection {
 	public var rects:Array<Rect> = new Array<Rect>();
 	

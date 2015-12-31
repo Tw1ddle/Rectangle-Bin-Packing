@@ -8,15 +8,15 @@ enum FreeRectChoiceHeuristic {
 	ContactPointRule;
 }
 
-class MaxRectsPack {
+class MaxRectsPacker implements IOccupancy {
 	private var binWidth:Int;
 	private var binHeight:Int;
 	private var usedRectangles:Array<Rect> = new Array<Rect>();
 	private var freeRectangles:Array<Rect> = new Array<Rect>();
 	
 	public function new(width:Int = 0, height:Int = 0) {
-		binWidth = 0;
-		binHeight = 0;
+		binWidth = width;
+		binHeight = height;
 		
 		var n = new Rect(0, 0, width, height);
 		
@@ -90,17 +90,22 @@ class MaxRectsPack {
 	}
 	
 	public function occupancy():Float {
+		if (usedRectangles.length == 0) {
+			return 0.0;
+		}
+		
 		var usedSurfaceArea:Float = 0;
 		
 		for (i in 0...usedRectangles.length) {
 			usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
 		}
 		
-		return cast(usedSurfaceArea, Float) / (binWidth * binHeight);
+		var totalArea:Float = binWidth * binHeight;
+		return usedSurfaceArea / totalArea;
 	}
 	
 	private function scoreRect(width:Int, height:Int, method:FreeRectChoiceHeuristic): { rect:Rect, primaryScore: Int, secondaryScore: Int } {
-		var newNode:Rect = null;
+		var newNode:Rect = new Rect();
 		var score1:Int = 0x3FFFFFFF;
 		var score2:Int = 0x3FFFFFFF;
 		
@@ -179,7 +184,7 @@ class MaxRectsPack {
 	}
 	
 	private function findPositionForNewNodeBottomLeft(width:Int, height:Int):{ bestNode:Rect, bestY:Int, bestX:Int } {
-		var bestNode:Rect = null;
+		var bestNode:Rect = new Rect();
 		
 		var bestY = 0x3FFFFFFF;
 		var bestX = 0x3FFFFFFF;
@@ -212,7 +217,7 @@ class MaxRectsPack {
 	}
 	
 	private function findPositionForNewNodeBestShortSideFit(width:Int, height:Int):{ bestNode: Rect, bestShortSideFit:Int, bestLongSideFit:Int } {
-		var bestNode:Rect = null;
+		var bestNode:Rect = new Rect();
 		
 		var bestShortSideFit = 0x3FFFFFFF;
 		var bestLongSideFit = 0x3FFFFFFF;
@@ -255,7 +260,7 @@ class MaxRectsPack {
 	}
 	
 	private function findPositionForNewNodeBestLongSideFit(width:Int, height:Int):{ bestNode: Rect, bestShortSideFit:Int, bestLongSideFit:Int } {
-		var bestNode:Rect = null;
+		var bestNode:Rect = new Rect();
 		
 		var bestShortSideFit = 0x3FFFFFFF;
 		var bestLongSideFit = 0x3FFFFFFF;
@@ -341,7 +346,7 @@ class MaxRectsPack {
 	}
 	
 	private function findPositionForNewNodeContactPoint(width:Int, height:Int):{ bestNode: Rect, bestContactScore:Int } {
-		var bestNode:Rect = null;
+		var bestNode:Rect = new Rect();
 		
 		var bestContactScore = -1;
 		

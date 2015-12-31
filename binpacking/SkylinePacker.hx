@@ -2,8 +2,8 @@ package binpacking;
 
 import binpacking.Rect.DisjointRectCollection;
 import binpacking.Rect.RectSize;
-import binpacking.GuillotinePack.GuillotineFreeRectChoiceHeuristic;
-import binpacking.GuillotinePack.GuillotineSplitHeuristic;
+import binpacking.GuillotinePacker.GuillotineFreeRectChoiceHeuristic;
+import binpacking.GuillotinePacker.GuillotineSplitHeuristic;
 
 enum LevelChoiceHeuristic {
 	BottomLeft;
@@ -22,16 +22,16 @@ private class SkylineNode {
 	}
 }
 
-class SkylinePack {
+class SkylinePacker implements IOccupancy {
 	private var binWidth:Int;
 	private var binHeight:Int;
 	private var usedSurfaceArea:Int;
 	private var useWasteMap:Bool;
-	private var wasteMap:GuillotinePack;
+	private var wasteMap:GuillotinePacker;
 	private var skyline:Array<SkylineNode>;
 	
 	#if debug
-	private var disjointRects:DisjointRectCollection;
+	private var disjointRects:DisjointRectCollection = new DisjointRectCollection();
 	#end
 	
 	public function new(binWidth:Int, binHeight:Int, useWasteMap:Bool) {
@@ -39,15 +39,13 @@ class SkylinePack {
 		this.binHeight = binHeight;
 		this.useWasteMap = useWasteMap;
 		
-		disjointRects = new DisjointRectCollection();
-		
 		usedSurfaceArea = 0;
 		skyline = new Array<SkylineNode>();
 		var node = new SkylineNode(0, 0, binWidth);
 		skyline.push(node);
 		
 		if (useWasteMap) {
-			wasteMap = new GuillotinePack(binWidth, binHeight);
+			wasteMap = new GuillotinePacker(binWidth, binHeight);
 			var rects = wasteMap.getFreeRectangles();
 			rects = [];
 		}
@@ -181,7 +179,10 @@ class SkylinePack {
 					newNode.y = y;
 					newNode.width = width;
 					newNode.height = height;
+					
+					#if debug
 					Sure.sure(disjointRects.disjoint(newNode));
+					#end
 				}
 			}
 			
@@ -199,7 +200,10 @@ class SkylinePack {
 					newNode.y = y;
 					newNode.width = height;
 					newNode.height = width;
+					
+					#if debug
 					Sure.sure(disjointRects.disjoint(newNode));
+					#end
 				}
 			}
 		}
@@ -227,7 +231,10 @@ class SkylinePack {
 					newNode.y = y;
 					newNode.width = width;
 					newNode.height = height;
+					
+					#if debug
 					Sure.sure(disjointRects.disjoint(newNode));
+					#end
 				}
 			}
 			
@@ -243,7 +250,10 @@ class SkylinePack {
 				newNode.y = y;
 				newNode.width = height;
 				newNode.height = width;
+				
+				#if debug
 				Sure.sure(disjointRects.disjoint(newNode));
+				#end
 			}
 		}
 		
@@ -325,7 +335,9 @@ class SkylinePack {
 			
 			var waste = new Rect(leftSide, skyline[skylineNodeIndex].y, rightSide - leftSide, y - skyline[skylineNodeIndex].y);
 			
+			#if debug
 			Sure.sure(disjointRects.disjoint(waste));
+			#end
 			
 			wasteMap.getFreeRectangles().push(waste);
 			

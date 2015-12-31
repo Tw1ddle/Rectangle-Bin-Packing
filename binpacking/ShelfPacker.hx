@@ -1,6 +1,6 @@
 package binpacking;
 
-import binpacking.GuillotinePack;
+import binpacking.GuillotinePacker;
 
 enum ShelfChoiceHeuristic {
 	Next; // Always add the new rectangle to the last open shelf
@@ -27,16 +27,16 @@ class Shelf {
 }
 
 // Simple but bad packing efficiency bin packing algorithm
-class ShelfPack {	
+class ShelfPacker implements IOccupancy {	
 	private var binWidth:Int;
 	private var binHeight:Int;
 	private var currentY:Int;
 	private var usedSurfaceArea:Int;
 	private var useWasteMap:Bool;
-	private var wasteMap:GuillotinePack;
+	private var wasteMap:GuillotinePacker;
 	private var shelves:Array<Shelf>;
 	
-	public function new(width:Int = 0, height:Int = 0, useWasteMap:Bool = false) {
+	public function new(width:Int = 0, height:Int = 0, useWasteMap:Bool = false) {		
 		binWidth = width;
 		binHeight = height;
 		currentY = 0;
@@ -46,7 +46,7 @@ class ShelfPack {
 		startNewShelf(0);
 		
 		if (useWasteMap) {
-			wasteMap = new GuillotinePack(width, height);
+			wasteMap = new GuillotinePacker(width, height);
 			wasteMap.getFreeRectangles().splice(0, wasteMap.getFreeRectangles().length);
 		}
 	}
@@ -295,7 +295,7 @@ class ShelfPack {
 	private function startNewShelf(startingHeight:Int):Void {
 		if (shelves.length > 0) {
 			var back = shelves[shelves.length - 1];
-			//Sure.sure(back.height != 0); // TODO this is always false when StartNewShelf(0) is called in the c'tor?
+			//Sure.sure(back.height != 0); // TODO ported from C++, but isn't this always false at first because StartNewShelf(0) is called in the c'tor?
 			currentY += back.height;
 			Sure.sure(currentY < binHeight);
 		}

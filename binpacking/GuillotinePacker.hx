@@ -21,7 +21,7 @@ enum GuillotineSplitHeuristic {
 	LongerAxis;
 }
 
-class GuillotinePack {
+class GuillotinePacker implements IOccupancy {
 	private var binWidth:Int;
 	private var binHeight:Int;
 	private var usedRectangles:Array<Rect> = new Array<Rect>();
@@ -30,7 +30,7 @@ class GuillotinePack {
 	private var disjointRects:DisjointRectCollection = new DisjointRectCollection();
 	#end
 	
-	public function new(width:Int = 0, height:Int = 0) {
+	public function new(width:Int = 0, height:Int = 0) {		
 		binWidth = width;
 		binHeight = height;
 		
@@ -111,7 +111,9 @@ class GuillotinePack {
 			
 			usedRectangles.push(newNode);
 			
+			#if debug
 			Sure.sure(disjointRects.add(newNode) == true);
+			#end
 		}
 	}
 	
@@ -134,7 +136,9 @@ class GuillotinePack {
 		
 		usedRectangles.push(newRect);
 		
+		#if debug
 		Sure.sure(disjointRects.add(newRect) == true);
+		#end
 		
 		return newRect;
 	}
@@ -197,6 +201,7 @@ class GuillotinePack {
 		
 		#if debug
 		test.clear();
+		// TODO this triggers sometimes?
 		for (i in 0...freeRectangles.length) {
 			Sure.sure(test.add(freeRectangles[i]) == true);
 		}
@@ -216,7 +221,9 @@ class GuillotinePack {
 				bestNode.height = height;
 				bestScore = 0xC0000000; // Neko min int is this (2^30-1, 0xC0000000)
 				nodeIndex = i;
+				#if debug
 				Sure.sure(disjointRects.disjoint(bestNode));
+				#end
 				break;
 			} else if (height == freeRectangles[i].width && width == freeRectangles[i].height) {
 				bestNode.x = freeRectangles[i].x;
@@ -225,7 +232,9 @@ class GuillotinePack {
 				bestNode.height = width;
 				bestScore =  0xC0000000; // Neko min int is this (2^30-1, 0xC0000000)
 				nodeIndex = i;
+				#if debug
 				Sure.sure(disjointRects.disjoint(bestNode));
+				#end
 				break;
 			} else if (width <= freeRectangles[i].width && height <= freeRectangles[i].height) {
 				var score = scoreByHeuristic(width, height, freeRectangles[i], rectChoice);
@@ -237,7 +246,9 @@ class GuillotinePack {
 					bestNode.height = height;
 					bestScore = score;
 					nodeIndex = i;
+					#if debug
 					Sure.sure(disjointRects.disjoint(bestNode));
+					#end
 				}
 			} else if (height <= freeRectangles[i].width && width <= freeRectangles[i].height) {
 				var score = scoreByHeuristic(height, width, freeRectangles[i], rectChoice);
@@ -249,7 +260,9 @@ class GuillotinePack {
 					bestNode.height = width;
 					bestScore = score;
 					nodeIndex = i;
+					#if debug
 					Sure.sure(disjointRects.disjoint(bestNode));
+					#end
 				}
 			}
 		}
@@ -282,7 +295,9 @@ class GuillotinePack {
 				splitHorizontal = (freeRect.width > freeRect.height);
 			default:
 				splitHorizontal = true;
+				#if debug
 				Sure.sure(false);
+				#end
 		}
 		
 		splitFreeRectAlongAxis(freeRect, placedRect, splitHorizontal);
@@ -307,8 +322,10 @@ class GuillotinePack {
 			freeRectangles.push(right);
 		}
 		
+		#if debug
 		Sure.sure(disjointRects.disjoint(bottom));
 		Sure.sure(disjointRects.disjoint(right));
+		#end
 	}
 	
 	private static function scoreByHeuristic(width:Int, height:Int, freeRect:Rect, rectChoice:GuillotineFreeRectChoiceHeuristic):Int {

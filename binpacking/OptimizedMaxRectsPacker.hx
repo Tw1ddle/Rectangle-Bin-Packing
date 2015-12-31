@@ -16,17 +16,16 @@ package binpacking;
 //	Author: Sam Twidale
 //		- Remove NME dependency, refactoring
 
-class OptimizedMaxRectsPack {
-	public var freeRectangles:Array<Rect>;
-
+class OptimizedMaxRectsPacker implements IOccupancy {
+	private var freeRectangles:Array<Rect>;
 	private var binWidth:Float;
 	private var binHeight:Float;
 		
 	public function new(width:Float, height:Float):Void {
-		binWidth = width;
-		binHeight = height;
 		freeRectangles = new Array<Rect>();
 		freeRectangles.push(new Rect(0, 0, width, height));
+		binWidth = width;
+		binHeight = height;
 	}
 	
 	public function insert(width:Float, height:Float):Rect {
@@ -79,11 +78,12 @@ class OptimizedMaxRectsPack {
 	}
 	
 	private function splitFreeNode(freeNode:Rect, usedNode:Rect):Bool {
-		var newNode:Rect;
 		// Test with SAT if the rectangles even intersect
 		if (usedNode.x >= freeNode.x + freeNode.width || usedNode.x + usedNode.width <= freeNode.x || usedNode.y >= freeNode.y + freeNode.height || usedNode.y + usedNode.height <= freeNode.y) {
-				return false;
+			return false;
 		}
+		
+		var newNode:Rect;
 		
 		if (usedNode.x < freeNode.x + freeNode.width && usedNode.x + usedNode.width > freeNode.x) {
 			// New node at the top side of the used node
@@ -147,6 +147,10 @@ class OptimizedMaxRectsPack {
 			}
 			i++;
 		}
+	}
+	
+	public function occupancy():Float {
+		return 0.0;
 	}
 	
 	private inline function isContainedIn(a:Rect, b:Rect):Bool {

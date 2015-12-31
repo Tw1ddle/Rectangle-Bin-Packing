@@ -1,23 +1,7 @@
 package binpacking;
 
-private class Node {
-	public var x:Int;
-	public var y:Int;
-	public var width:Int;
-	public var height:Int;
-	public var flipped:Bool;
-	
-	public inline function new(x:Int = 0, y:Int = 0, width:Int = 0, height:Int = 0, flipped:Bool = false) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.flipped = flipped;
-	}
-}
-
 // Naive implementation of simple but bad packing efficiency bin packing algorithm
-class NaiveShelfPack {
+class NaiveShelfPacker implements IOccupancy {
 	private var binWidth:Int;
 	private var binHeight:Int;
 	private var currentX:Int;
@@ -35,8 +19,8 @@ class NaiveShelfPack {
 		usedSurfaceArea = 0;
 	}
 	
-	public function insert(width:Int, height:Int):Node {
-		var newNode = new Node();
+	public function insert(width:Int, height:Int):Rect {
+		var newNode = new Rect();
 		
 		if (((width > height && width < shelfHeight) || (width < height && height > shelfHeight))) {
 			newNode.flipped = true;
