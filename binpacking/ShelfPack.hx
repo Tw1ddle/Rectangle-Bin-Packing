@@ -1,5 +1,7 @@
 package binpacking;
 
+import binpacking.GuillotinePack;
+
 enum ShelfChoiceHeuristic {
 	Next; // NF: Always put the new rectangle to the last open shelf
 	First; // FF: Test each rectangle against each shelf in turn and pack it to the first where it fits
@@ -31,7 +33,7 @@ class ShelfPack {
 	private var currentY:Int;
 	private var usedSurfaceArea:Int;
 	private var useWasteMap:Bool;
-	private var wasteMap:GuillotineBinMap;
+	private var wasteMap:GuillotinePack;
 	private var shelves:Array<Shelf>;
 	
 	public function new(width:Int = 0, height:Int = 0, useWasteMap:Bool = false) {
@@ -44,8 +46,8 @@ class ShelfPack {
 		startNewShelf(0);
 		
 		if (useWasteMap) {
-			wasteMap.init(width, height);
-			wasteMap.getFreeRectangles().clear();
+			wasteMap = new GuillotinePack(width, height);
+			wasteMap.getFreeRectangles().splice(0, wasteMap.getFreeRectangles().length);
 		}
 	}
 	
@@ -53,7 +55,7 @@ class ShelfPack {
 		var newNode = new Rect();
 		
 		if (useWasteMap) {
-			newNode = wasteMap.insert(width, height, true, GuillotineBinPack.RectBestShortSideFit, GuillotineBinPack.SplitMaximizeArea);
+			newNode = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
 			
 			if (newNode.height != 0) {
 				usedSurfaceArea += width * height;
@@ -69,7 +71,7 @@ class ShelfPack {
 					return newNode;
 				}
 			case ShelfChoiceHeuristic.First:
-				for (shelf in 0...shelves.length) {
+				for (i in 0...shelves.length) {
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						addToShelf(shelves[i], width, height, newNode);
 						return newNode;
@@ -82,11 +84,10 @@ class ShelfPack {
 					rotateToShelf(shelves[i], width, height);
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var surfaceArea:Int = (binWidth - shelves[i].currentX) * shelves[i].height;
-					}
-					
-					if (surfaceArea < bestShelfSurfaceArea) {
-						bestShelf = shelves[i];
-						bestShelfSurfaceArea = surfaceArea;
+						if (surfaceArea < bestShelfSurfaceArea) {
+							bestShelf = shelves[i];
+							bestShelfSurfaceArea = surfaceArea;
+						}
 					}
 				}
 				
@@ -122,7 +123,7 @@ class ShelfPack {
 						Sure.sure(heightDifference >= 0);
 						if (heightDifference < bestShelfHeightDifference) {
 							bestShelf = shelves[i];
-							bestShelfHeightDifference = heightDifference;
+							bestShelfHeightDifference = Std.int(heightDifference);
 						}
 					}
 				}
@@ -174,7 +175,7 @@ class ShelfPack {
 		}
 		
 		if (width < height && height <= binWidth) {
-			swap(width, height);
+			swap(width, height); // TODO
 		}
 		
 		if (canStartNewShelf(height)) {
@@ -201,13 +202,13 @@ class ShelfPack {
 		var freeRects = wasteMap.getFreeRectangles();
 		
 		for (i in 0...shelf.usedRectangles.length) {
-			var rect = shelf.usedRectangles[i];
+			var r = shelf.usedRectangles[i];
 			var newNode = new Rect(r.x, r.y + r.height, r.width, shelf.height - r.height);
 			if (newNode.height > 0) {
 				freeRects.push(newNode);
 			}
 		}
-		shelf.usedRectangles.clear();
+		shelf.usedRectangles.splice(0, shelf.usedRectangles.length);
 		
 		var newNode = new Rect(shelf.currentX, shelf.startY, binWidth - shelf.currentX, shelf.height);
 		
@@ -230,7 +231,9 @@ class ShelfPack {
 		}
 	}
 	
-	private function rotateToShelf(shelf:Shelf, rect:Rect):Void {
+	// TODO need to pass in & potentially swap width and height values
+	// TODO make a boolean and swap manually?
+	private function rotateToShelf(shelf:Shelf, rect:Rect):Void {		
 		if ((width > height && width > binWidth - shelf.currentX) || (width > height && width < shelf.height) || (width < height && height > shelf.height && height <= binWidth - shelf.currentX)) {
 			swap(width, height);
 		}
@@ -252,7 +255,7 @@ class ShelfPack {
 		
 		Sure.sure(shelf.currentX <= binWidth);
 		
-		shelf.height = Math.max(shelf.height, height);
+		shelf.height = Std.int(Math.max(shelf.height, height));
 		
 		Sure.sure(shelf.height <= binHeight);
 		

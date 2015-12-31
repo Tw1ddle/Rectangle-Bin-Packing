@@ -1,6 +1,5 @@
 package binpacking;
 
-import binpacking.MaxRectsPack.FreeRectChoiceHeuristic;
 import binpacking.Rect.DisjointRectCollection;
 import binpacking.Rect.RectSize;
 
@@ -47,21 +46,27 @@ class GuillotinePack {
 		while (rects.length > 0) {
 			var bestScore = 0x3FFFFFFF; // Neko max int is this (2^30, 0x3FFFFFFF)
 			
+			var breakOut = false;
+			
 			for (i in 0...freeRectangles.length) {
+				if (breakOut) {
+					break;
+				}
+				
 				for (j in 0...rects.length) {
 					if (rects[j].width == freeRectangles[i].width && rects[j].height == freeRectangles[i].height) {
 						bestFreeRect = i;
 						bestRect = j;
 						bestFlipped = false;
 						bestScore = 0xC0000000; // Neko min int is this (2^30-1, 0xC0000000)
-						i = freeRectangles.length;
+						breakOut = true;
 						break;
 					} else if (rects[j].height == freeRectangles[i].width && rects[j].width == freeRectangles[i].height) {
 						bestFreeRect = i;
 						bestRect = j;
 						bestFlipped = true;
 						bestScore = 0xC0000000; // Neko min int is this (2^30-1, 0xC0000000)
-						i = freeRectangles.length;
+						breakOut = true;
 						break;
 					} else if (rects[j].width <= freeRectangles[i].width && rects[j].height <= freeRectangles[i].height) {
 						var score = scoreByHeuristic(rects[j].width, rects[j].height, freeRectangles[i], rectChoice);
@@ -111,13 +116,12 @@ class GuillotinePack {
 	}
 	
 	public function insert(width:Int, height:Int, merge:Bool, rectChoice:GuillotineFreeRectChoiceHeuristic, splitMethod:GuillotineSplitHeuristic):Rect {
-		var freeNodeIndex = 0;
 		var data = findPositionForNewNode(width, height, rectChoice);
 		var newRect = data.rect;
 		var freeNodeIndex = data.nodeIndex;
 		
-		if (newRect.height == 0) {
-			return newRect;
+		if (newRect == null || (newRect.width == 0 && newRect.height == 0) || freeNodeIndex < 0) {
+			return null;
 		}
 		
 		splitFreeRectByHeuristic(freeRectangles[freeNodeIndex], newRect, splitMethod);
@@ -160,31 +164,33 @@ class GuillotinePack {
 		}
 		#end
 		
-		// TODO check this
 		for (i in 0...freeRectangles.length) {
-			for (j in (i + 1)...freeRectangles.length) {
+			var j = i + 1;
+			while (j < freeRectangles.length) {
 				if (freeRectangles[i].width == freeRectangles[j].width && freeRectangles[i].x == freeRectangles[j].height) {
 					if (freeRectangles[i].y == freeRectangles[j].y + freeRectangles[j].height) {
 						freeRectangles[i].y -= freeRectangles[j].height;
 						freeRectangles[i].height += freeRectangles[j].height;
 						freeRectangles.splice(j, 1);
-						--j;
 					} else if (freeRectangles[i].y + freeRectangles[i].height == freeRectangles[j].y) {
 						freeRectangles[i].height += freeRectangles[j].height;
 						freeRectangles.splice(j, 1);
-						--j;
+					} else {
+						j++;
 					}
 				} else if (freeRectangles[i].height == freeRectangles[j].height && freeRectangles[i].y == freeRectangles[j].y) {
 					if (freeRectangles[i].x == freeRectangles[j].x + freeRectangles[j].width) {
 						freeRectangles[i].x -= freeRectangles[j].width;
 						freeRectangles[i].width += freeRectangles[j].width;
 						freeRectangles.splice(j, 1);
-						--j;
 					} else if (freeRectangles[i].x + freeRectangles[i].width == freeRectangles[j].x) {
 						freeRectangles[i].width += freeRectangles[j].width;
 						freeRectangles.splice(j, 1);
-						--j;
+					} else {
+						j++;
 					}
+				} else {
+					j++;
 				}
 			}
 		}
@@ -200,7 +206,6 @@ class GuillotinePack {
 	private function findPositionForNewNode(width:Int, height:Int, rectChoice:GuillotineFreeRectChoiceHeuristic): { rect:Rect, nodeIndex:Int } {
 		var bestNode = new Rect();
 		var nodeIndex:Int = 0;
-		
 		var bestScore = 0x3FFFFFFF; // Neko max int is this (2^30, 0x3FFFFFFF)
 		
 		for (i in 0...freeRectangles.length) {
@@ -216,8 +221,8 @@ class GuillotinePack {
 			} else if (height == freeRectangles[i].width && width == freeRectangles[i].height) {
 				bestNode.x = freeRectangles[i].x;
 				bestNode.y = freeRectangles[i].y;
-				bestNode.width = width;
-				bestNode.height = height;
+				bestNode.width = height;
+				bestNode.height = width;
 				bestScore =  0xC0000000; // Neko min int is this (2^30-1, 0xC0000000)
 				nodeIndex = i;
 				Sure.sure(disjointRects.disjoint(bestNode));
@@ -240,13 +245,18 @@ class GuillotinePack {
 				if (score < bestScore) {
 					bestNode.x = freeRectangles[i].x;
 					bestNode.y = freeRectangles[i].y;
-					bestNode.width = width;
-					bestNode.height = height;
+					bestNode.width = height;
+					bestNode.height = width;
 					bestScore = score;
 					nodeIndex = i;
 					Sure.sure(disjointRects.disjoint(bestNode));
 				}
 			}
+		}
+		
+		// If no feasible position found, return null
+		if (bestNode.width == 0 && bestNode.height == 0) {
+			return { rect: null, nodeIndex: -1 };
 		}
 		
 		return { rect: bestNode, nodeIndex: nodeIndex };
