@@ -53,7 +53,7 @@ class MaxRectsPack {
 		}
 	}
 	
-	public function insertRect(width:Int, height:Int, method:FreeRectChoiceHeuristic):Rect {
+	public function insert(width:Int, height:Int, method:FreeRectChoiceHeuristic):Rect {
 		var newNode:Rect = switch(method) {
 			case FreeRectChoiceHeuristic.BestShortSideFit:
 				findPositionForNewNodeBestShortSideFit(width, height).bestNode;
@@ -67,18 +67,20 @@ class MaxRectsPack {
 				findPositionForNewNodeBestAreaFit(width, height).bestNode;
 		}
 		
-		if (newNode.height == 0) {
-			return newNode;
+		if (newNode == null || newNode.width == 0 || newNode.height == 0) {
+			return null;
 		}
 		
 		var numRectanglesToProcess = freeRectangles.length;
 		
-		for (i in 0...numRectanglesToProcess) {
+		var i = 0;
+		while (i < numRectanglesToProcess) {
 			if (splitFreeNode(freeRectangles[i], newNode)) {
 				freeRectangles.splice(i, 1);
 				--i;
 				--numRectanglesToProcess;
 			}
+			i++;
 		}
 		
 		pruneFreeList();
@@ -139,12 +141,15 @@ class MaxRectsPack {
 	
 	private function placeRect(node:Rect):Void {
 		var numRectanglesToProcess = freeRectangles.length;
-		for (i in 0...numRectanglesToProcess) {
+		
+		var i = 0;
+		while (i < numRectanglesToProcess) {
 			if (splitFreeNode(freeRectangles[i], node)) {
 				freeRectangles.splice(i, 1);
-				--i;
 				--numRectanglesToProcess;
+				continue;
 			}
+			i++;
 		}
 		
 		pruneFreeList();
@@ -293,7 +298,7 @@ class MaxRectsPack {
 	}
 	
 	private function findPositionForNewNodeBestAreaFit(width:Int, height:Int): { bestNode: Rect, bestAreaFit:Int, bestShortSideFit:Int } {
-		var bestNode:Rect = null;
+		var bestNode:Rect = new Rect();
 
 		var bestAreaFit = 0x3FFFFFFF;
 		var bestShortSideFit = 0x3FFFFFFF;
@@ -407,19 +412,24 @@ class MaxRectsPack {
 	}
 	
 	private function pruneFreeList():Void {
-		for (i in 0...freeRectangles.length) {
-			for (j in (i + 1)...freeRectangles.length) {
+		var i = 0;
+		while (i < freeRectangles.length) {
+			var j = i + 1;
+			while (j < freeRectangles.length) {
 				if (freeRectangles[i].isContainedIn(freeRectangles[j])) {
 					freeRectangles.splice(i, 1);
-					--i;
+					i--;
 					break;
 				}
 				
 				if (freeRectangles[j].isContainedIn(freeRectangles[i])) {
 					freeRectangles.splice(j, 1);
-					--j;
+					continue;
 				}
+				
+				j++;
 			}
+			i++;
 		}
 	}
 	

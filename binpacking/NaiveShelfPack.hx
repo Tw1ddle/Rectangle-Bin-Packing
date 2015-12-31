@@ -16,6 +16,7 @@ private class Node {
 	}
 }
 
+// Naive implementation of simple but bad packing efficiency bin packing algorithm
 class NaiveShelfPack {
 	private var binWidth:Int;
 	private var binHeight:Int;

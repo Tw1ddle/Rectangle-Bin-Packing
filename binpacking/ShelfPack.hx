@@ -3,13 +3,13 @@ package binpacking;
 import binpacking.GuillotinePack;
 
 enum ShelfChoiceHeuristic {
-	Next; // NF: Always put the new rectangle to the last open shelf
-	First; // FF: Test each rectangle against each shelf in turn and pack it to the first where it fits
-	BestArea; // BAF: Choose the shelf with smallest remaining shelf area
-	WorstArea; // WAF: Choose the shelf with the largest remaining shelf area
-	BestHeight; // BHF: Choose the smallest shelf (height-wise) where the rectangle fits
-	BestWidth; // BWF: Choose the shelf that has the least remaining horizontal shelf space available after packing
-	WorstWidth; // WWF: Choose the shelf that will have most remainining horizontal shelf space available after packing
+	Next; // Always add the new rectangle to the last open shelf
+	First; // Test each rectangle against each shelf in turn and pack it to the first where it fits
+	BestArea; // Choose the shelf with smallest remaining shelf area
+	WorstArea; // Choose the shelf with the largest remaining shelf area
+	BestHeight; // Choose the smallest shelf (height-wise) where the rectangle fits
+	BestWidth; // Choose the shelf that has the least remaining horizontal shelf space available after packing
+	WorstWidth; // Choose the shelf that will have most remainining horizontal shelf space available after packing
 }
 
 class Shelf {
@@ -51,17 +51,17 @@ class ShelfPack {
 		}
 	}
 	
-	public function insert(width:Int, height:Int, heuristic:ShelfChoiceHeuristic):Rect {
-		var newNode = new Rect();
-		
+	public function insert(width:Int, height:Int, heuristic:ShelfChoiceHeuristic):Rect {		
 		if (useWasteMap) {
-			newNode = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
+			var node = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
 			
-			if (newNode.height != 0) {
+			if (node != null) {
 				usedSurfaceArea += width * height;
-				return newNode;
+				return node;
 			}
 		}
+		
+		var newNode = new Rect();
 		
 		switch(heuristic) {
 			case ShelfChoiceHeuristic.Next:
@@ -81,7 +81,12 @@ class ShelfPack {
 				var bestShelf = null;
 				var bestShelfSurfaceArea:Int = -1;
 				for (i in 0...shelves.length) {
-					rotateToShelf(shelves[i], width, height);
+					if (shouldRotateToShelf(shelves[i], width, height)) {
+						var tmp = width;
+						width = height;
+						height = tmp;	
+					}
+					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var surfaceArea:Int = (binWidth - shelves[i].currentX) * shelves[i].height;
 						if (surfaceArea < bestShelfSurfaceArea) {
@@ -99,7 +104,12 @@ class ShelfPack {
 				var bestShelf = null;
 				var bestShelfSurfaceArea:Int = -1;
 				for (i in 0...shelves.length) {
-					rotateToShelf(shelves[i], width, height);
+					if (shouldRotateToShelf(shelves[i], width, height)) {
+						var tmp = width;
+						width = height;
+						height = tmp;
+					}
+					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var surfaceArea:Int = (binWidth - shelves[i].currentX) * shelves[i].height;
 						if (surfaceArea > bestShelfSurfaceArea) {
@@ -117,7 +127,12 @@ class ShelfPack {
 				var bestShelf = null;
 				var bestShelfHeightDifference = 0x3FFFFFFF; // Neko max int is this (2^30-1, 0x3FFFFFFF)
 				for (i in 0...shelves.length) {
-					rotateToShelf(shelves[i], width, height);
+					if (shouldRotateToShelf(shelves[i], width, height)) {
+						var tmp = width;
+						width = height;
+						height = tmp;
+					}
+					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var heightDifference = Math.max(shelves[i].height - height, 0);
 						Sure.sure(heightDifference >= 0);
@@ -136,7 +151,12 @@ class ShelfPack {
 				var bestShelf = null;
 				var bestShelfWidthDifference = 0x3FFFFFFF; // Neko max int is this (2^30-1, 0x3FFFFFFF)
 				for (i in 0...shelves.length) {
-					rotateToShelf(shelves[i], width, height);
+					if (shouldRotateToShelf(shelves[i], width, height)) {
+						var tmp = width;
+						width = height;
+						height = tmp;
+					}
+					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var widthDifference = binWidth - shelves[i].currentX - width;
 						Sure.sure(widthDifference >= 0);
@@ -156,7 +176,12 @@ class ShelfPack {
 				var bestShelf = null;
 				var bestShelfWidthDifference = -1;
 				for (i in 0...shelves.length) {
-					rotateToShelf(shelves[i], width, height);
+					if (shouldRotateToShelf(shelves[i], width, height)) {
+						var tmp = width;
+						width = height;
+						height = tmp;	
+					}
+					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
 						var widthDifference = binWidth - shelves[i].currentX - width;
 						Sure.sure(widthDifference >= 0);
@@ -175,7 +200,9 @@ class ShelfPack {
 		}
 		
 		if (width < height && height <= binWidth) {
-			swap(width, height); // TODO
+			var tmp = width;
+			width = height;
+			height = tmp;
 		}
 		
 		if (canStartNewShelf(height)) {
@@ -223,26 +250,24 @@ class ShelfPack {
 	
 	private function fitsOnShelf(shelf:Shelf, width:Int, height:Int, canResize:Bool):Bool {
 		var shelfHeight = canResize ? (binHeight - shelf.startY) : shelf.height;
-		
-		if ((shelf.currentX + width <= binWidth && height <= shelfHeight) || (shelf.currentX + height <= binWidth && width <= shelfHeight)) {
-			return true;
-		} else {
-			return false;
-		}
+		return ((shelf.currentX + width <= binWidth && height <= shelfHeight) || (shelf.currentX + height <= binWidth && width <= shelfHeight));
 	}
 	
-	// TODO need to pass in & potentially swap width and height values
-	// TODO make a boolean and swap manually?
-	private function rotateToShelf(shelf:Shelf, rect:Rect):Void {		
+	private function shouldRotateToShelf(shelf:Shelf, width:Int, height:Int):Bool {		
 		if ((width > height && width > binWidth - shelf.currentX) || (width > height && width < shelf.height) || (width < height && height > shelf.height && height <= binWidth - shelf.currentX)) {
-			swap(width, height);
+			return true;
 		}
+		return false;
 	}
 	
 	private function addToShelf(shelf:Shelf, width:Int, height:Int, newNode:Rect):Void {
 		Sure.sure(fitsOnShelf(shelf, width, height, true));
 		
-		rotateToShelf(shelf, width, height);
+		if (shouldRotateToShelf(shelf, width, height)) {
+			var tmp = width;
+			width = height;
+			height = tmp;
+		}
 		
 		newNode.x = shelf.currentX;
 		newNode.y = shelf.startY;
@@ -270,7 +295,7 @@ class ShelfPack {
 	private function startNewShelf(startingHeight:Int):Void {
 		if (shelves.length > 0) {
 			var back = shelves[shelves.length - 1];
-			Sure.sure(back.height != 0);
+			//Sure.sure(back.height != 0); // TODO this is always false when StartNewShelf(0) is called in the c'tor?
 			currentY += back.height;
 			Sure.sure(currentY < binHeight);
 		}

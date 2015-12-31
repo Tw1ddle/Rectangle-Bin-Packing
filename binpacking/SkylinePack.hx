@@ -82,6 +82,10 @@ class SkylinePack {
 	public function insert(width:Int, height:Int, method:LevelChoiceHeuristic):Rect {
 		var node:Rect = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
 		
+		if (node == null) {
+			return null;
+		}
+		
 		#if debug
 		Sure.sure(disjointRects.disjoint(node));
 		#end
@@ -340,7 +344,8 @@ class SkylinePack {
 		Sure.sure(newNode.x + newNode.width <= binWidth);
 		Sure.sure(newNode.y <= binHeight);
 		
-		for (i in (skylineNodeIndex + 1)...skyline.length) {
+		var i = skylineNodeIndex + 1;
+		while (i < skyline.length) {
 			Sure.sure(skyline[i - 1].x <= skyline[i].x);
 			
 			if (skyline[i].x < skyline[i - 1].x + skyline[i - 1].width) {
@@ -351,23 +356,27 @@ class SkylinePack {
 				
 				if (skyline[i].width <= 0) {
 					skyline.splice(i, 1);
-					--i;
+					continue;
 				} else {
 					break;
 				}
 			} else {
 				break;
 			}
+			
+			i++;
 		}
 	}
 	
 	private function mergeSkylines():Void {
-		for (i in 0...skyline.length) {
+		var i = 0;
+		while (i < skyline.length) {
 			if (skyline[i].y == skyline[i + 1].y) {
 				skyline[i].width += skyline[i + 1].width;
 				skyline.splice(i + 1, 1);
-				--i;
+				continue;
 			}
+			i++;
 		}
 	}
 }

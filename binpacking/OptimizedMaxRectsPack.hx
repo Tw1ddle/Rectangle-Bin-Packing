@@ -14,7 +14,7 @@ package binpacking;
 //	    - Ported to HaXe, optimized
 //		
 //	Author: Sam Twidale
-//		- Remove NME dependency, minor refactoring
+//		- Remove NME dependency, refactoring
 
 class OptimizedMaxRectsPack {
 	public var freeRectangles:Array<Rect>;
@@ -29,10 +29,10 @@ class OptimizedMaxRectsPack {
 		freeRectangles.push(new Rect(0, 0, width, height));
 	}
 	
-	public function quickInsert(width:Float, height:Float):Rect {
-		var newNode = quickFindPositionForNewNodeBestAreaFit(width, height);
+	public function insert(width:Float, height:Float):Rect {
+		var newNode = findPositionForNewNodeBestAreaFit(width, height);
 		
-		if (newNode.height == 0) {
+		if (newNode == null) {
 			return newNode;
 		}
 		
@@ -52,7 +52,7 @@ class OptimizedMaxRectsPack {
 		return newNode;
 	}
 	
-	private inline function quickFindPositionForNewNodeBestAreaFit(width:Float, height:Float):Rect {
+	private inline function findPositionForNewNodeBestAreaFit(width:Float, height:Float):Rect {
 		var score = Math.POSITIVE_INFINITY;
 		var areaFit:Float;
 		var bestNode:Rect = new Rect();
@@ -71,7 +71,11 @@ class OptimizedMaxRectsPack {
 			}
 		}
 		
-		return bestNode;
+		if(bestNode.height != 0) {
+			return bestNode;
+		} else {
+			return null;
+		}
 	}
 	
 	private function splitFreeNode(freeNode:Rect, usedNode:Rect):Bool {
