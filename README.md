@@ -11,16 +11,18 @@ Based on the public domain C++ bin packing implementations by [Jukka Jylänki](h
 
 ## Usage ##
 
-Try the [demo](http://www.samcodes.co.uk/project/rectangle-bin-packing-demo/) in your browser and refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
+Try the [demo](http://www.samcodes.co.uk/project/rectangle-bin-packing-demo/) in your browser, or refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
 
 Basic usage example:
 
 ```haxe
+// Initialize one of the bin packers
 var binWidth:Int = 800;
 var binHeight:Int = 400;
 var useWasteMap:Bool = true;
 var packer = new SkylinePack(binWidth, binHeight, useWasteMap);
 
+// Start packing rectangles
 var rectWidth:Int = 20;
 var rectHeight:Int = 40;
 var heuristic:LevelChoiceHeuristic = LevelChoiceHeuristic.MinWasteFit;
@@ -55,7 +57,7 @@ Screenshots of the [demo](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/
 ![Screenshot](screenshots/screenshot2.png?raw=true "Bin Packing Algorithms screenshot 2")
 
 ## Notes ##
-* Most of the algorithms are ported from public domain C++ implementations by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
+* The algorithms in this haxelib were ported from a public domain C++ implementations by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
 * For details about the algorithms, see Jukka's [blog posts](http://clb.demon.fi/projects/even-more-rectangle-bin-packing) and [paper](http://clb.demon.fi/files/RectangleBinPack.pdf).
 * The haxelib supports every Haxe target, but has not been thoroughly tested or optimized for performance, especially on native targets.
 * If you have any questions or suggestions then [get in touch](http://samcodes.co.uk/contact).
