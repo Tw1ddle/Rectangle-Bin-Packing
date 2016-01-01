@@ -51,32 +51,6 @@ class SkylinePacker implements IOccupancy {
 		}
 	}
 	
-	public function insertRects(rects:Array<RectSize>, destination:Array<Rect>, method:LevelChoiceHeuristic):Void {
-		destination.splice(0, destination.length);
-			
-		while (rects.length > 0) {
-			var bestNode:Rect = new Rect();
-			var bestScore1 = 0x3FFFFFFF;
-			var bestScore2 = 0x3FFFFFFF;
-			var bestSkylineIndex = -1;
-			var bestRectIndex = -1;
-			
-			for (i in 0...rects.length) {
-				var newNode:Rect = new Rect();
-				var score1:Int;
-				var score2:Int;
-				var index:Int;
-				
-				switch(method) {
-					case LevelChoiceHeuristic.BottomLeft:
-						//var data = newNode = findPositionForNewNodeBottomLeft(rects[i].width, rects[i].height);
-						
-					case LevelChoiceHeuristic.MinWasteFit:
-				}
-			}	
-		}
-	}
-	
 	public function insert(width:Int, height:Int, method:LevelChoiceHeuristic):Rect {
 		var node:Rect = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
 		
@@ -200,6 +174,7 @@ class SkylinePacker implements IOccupancy {
 					newNode.y = y;
 					newNode.width = height;
 					newNode.height = width;
+					newNode.flipped = !newNode.flipped;
 					
 					#if debug
 					Sure.sure(disjointRects.disjoint(newNode));
@@ -250,6 +225,7 @@ class SkylinePacker implements IOccupancy {
 				newNode.y = y;
 				newNode.width = height;
 				newNode.height = width;
+				newNode.flipped = !newNode.flipped;
 				
 				#if debug
 				Sure.sure(disjointRects.disjoint(newNode));

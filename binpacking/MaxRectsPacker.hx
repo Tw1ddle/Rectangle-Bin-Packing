@@ -23,36 +23,6 @@ class MaxRectsPacker implements IOccupancy {
 		freeRectangles.push(n);
 	}
 	
-	public function insertRects(rects:Array<Rect>, dst:Array<Rect>, method:FreeRectChoiceHeuristic):Void {		
-		dst.splice(0, dst.length);
-		
-		while (rects.length > 0) {
-			var bestScore1 = 0x3FFFFFFF;
-			var bestScore2 = 0x3FFFFFFF;
-			
-			var bestRectIndex = -1;
-			var bestNode:Rect = new Rect();
-			
-			for (i in 0...rects.length) {				
-				var details = scoreRect(Std.int(rects[i].width), Std.int(rects[i].height), method);
-				
-				if (details.primaryScore < bestScore1 || (details.primaryScore == bestScore1 && details.secondaryScore < bestScore2)) {
-					bestScore1 = details.primaryScore;
-					bestScore2 = details.secondaryScore;
-					bestNode = details.rect;
-					bestRectIndex = i;
-				}
-			}
-			
-			if (bestRectIndex == -1) {
-				return;
-			}
-			
-			placeRect(bestNode);
-			rects.splice(bestRectIndex, 1);
-		}
-	}
-	
 	public function insert(width:Int, height:Int, method:FreeRectChoiceHeuristic):Rect {
 		var newNode:Rect = switch(method) {
 			case FreeRectChoiceHeuristic.BestShortSideFit:
@@ -250,6 +220,7 @@ class MaxRectsPacker implements IOccupancy {
 					bestNode.y = freeRectangles[i].y;
 					bestNode.width = height;
 					bestNode.height = width;
+					bestNode.flipped = !bestNode.flipped;
 					bestShortSideFit = Std.int(flippedShortSideFit);
 					bestLongSideFit = Std.int(flippedLongSideFit);
 				}
@@ -293,6 +264,7 @@ class MaxRectsPacker implements IOccupancy {
 					bestNode.y = freeRectangles[i].y;
 					bestNode.width = height;
 					bestNode.height = width;
+					bestNode.flipped = !bestNode.flipped;
 					bestShortSideFit = Std.int(shortSideFit);
 					bestLongSideFit = Std.int(longSideFit);
 				}
@@ -336,6 +308,7 @@ class MaxRectsPacker implements IOccupancy {
 					bestNode.y = freeRectangles[i].y;
 					bestNode.width = height;
 					bestNode.height = width;
+					bestNode.flipped = !bestNode.flipped;
 					bestShortSideFit = Std.int(shortSideFit);
 					bestAreaFit = Std.int(areaFit);
 				}
@@ -369,6 +342,7 @@ class MaxRectsPacker implements IOccupancy {
 					bestNode.y = freeRectangles[i].y;
 					bestNode.width = height;
 					bestNode.height = width;
+					bestNode.flipped = !bestNode.flipped;
 					bestContactScore = score;
 				}
 			}

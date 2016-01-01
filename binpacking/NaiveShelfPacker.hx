@@ -1,34 +1,42 @@
 package binpacking;
 
-// Naive implementation of simple but bad packing efficiency bin packing algorithm
+// Naive shelf bin packing algorithm
+// First-fit implementation that packs poorly in most scenarios
 class NaiveShelfPacker implements IOccupancy {
 	private var binWidth:Int;
 	private var binHeight:Int;
+	private var shelfHeight:Int;
 	private var currentX:Int;
 	private var currentY:Int;
-	private var shelfHeight:Int;
-	private var usedSurfaceArea:Int;
+	private var usedSurfaceArea:Float;
 	
 	public function new(width:Int, height:Int) {
+		Sure.sure(width > 0 && height > 0);
+		
 		this.binWidth = width;
 		this.binHeight = height;
-		
+		shelfHeight = 0;
 		currentX = 0;
 		currentY = 0;
-		shelfHeight = 0;
 		usedSurfaceArea = 0;
 	}
 	
+	// Attempts to insert a rect with width and height into the bin
+	// Returns the rect on success, null on failure
 	public function insert(width:Int, height:Int):Rect {
-		var newNode = new Rect();
+		Sure.sure(width > 0 && height > 0);
 		
+		var flipped:Bool = false;
+		
+		// If the long edge of the new rectangle fits vertically onto the current shelf, flip it
+		// If the short edge is larger than the current shelf height, store the short edge vertically
 		if (((width > height && width < shelfHeight) || (width < height && height > shelfHeight))) {
-			newNode.flipped = true;
 			var tmp = width;
 			width = height;
 			height = tmp;
+			flipped = true;
 		} else {
-			newNode.flipped = true;
+			flipped = false;
 		}
 		
 		if (currentX + width > binWidth) {
@@ -36,40 +44,43 @@ class NaiveShelfPacker implements IOccupancy {
 			currentY += shelfHeight;
 			shelfHeight = 0;
 			
+			// When starting a new shelf, store the new long edge of the new rectangle horizontally to minimize the new shelf height
 			if (width < height) {
 				var tmp = width;
 				width = height;
 				height = tmp;
-				newNode.flipped = !newNode.flipped;
+				flipped = !flipped;
 			}
 		}
 		
+		// If the rectangle doesn't fit in this orientation, try flipping
 		if (width > binWidth || currentY + height > binHeight) {
 			var tmp = width;
 			width = height;
 			height = tmp;
-			newNode.flipped = !newNode.flipped;
+			flipped = !flipped;
 		}
 		
+		// If flipping didn't help, return failure
 		if (width > binWidth || currentY + height > binHeight) {
 			return null;
 		}
 		
-		newNode.width = width;
-		newNode.height = height;
-		newNode.x = currentX;
-		newNode.y = currentY;
+		var newNode = new Rect(currentX, currentY, width, height, flipped);
 		
 		currentX += width;
 		shelfHeight = shelfHeight > height ? shelfHeight : height; 
-		
 		usedSurfaceArea += width * height;
 		
 		return newNode;
 	}
 	
+	// Computes the ratio of used surface area to total area
 	public function occupancy():Float {
-		var fUsedSurfaceArea = cast(usedSurfaceArea, Float);
-		return fUsedSurfaceArea / (binWidth * binHeight);
+		if (usedSurfaceArea == 0) {
+			return 0;
+		}
+		
+		return usedSurfaceArea / (binWidth * binHeight);
 	}
 }

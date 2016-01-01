@@ -84,7 +84,8 @@ class ShelfPacker implements IOccupancy {
 					if (shouldRotateToShelf(shelves[i], width, height)) {
 						var tmp = width;
 						width = height;
-						height = tmp;	
+						height = tmp;
+						newNode.flipped = !newNode.flipped;
 					}
 					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
@@ -108,6 +109,7 @@ class ShelfPacker implements IOccupancy {
 						var tmp = width;
 						width = height;
 						height = tmp;
+						newNode.flipped = !newNode.flipped;
 					}
 					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
@@ -131,6 +133,7 @@ class ShelfPacker implements IOccupancy {
 						var tmp = width;
 						width = height;
 						height = tmp;
+						newNode.flipped = !newNode.flipped;
 					}
 					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
@@ -155,6 +158,7 @@ class ShelfPacker implements IOccupancy {
 						var tmp = width;
 						width = height;
 						height = tmp;
+						newNode.flipped = !newNode.flipped;
 					}
 					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
@@ -179,7 +183,8 @@ class ShelfPacker implements IOccupancy {
 					if (shouldRotateToShelf(shelves[i], width, height)) {
 						var tmp = width;
 						width = height;
-						height = tmp;	
+						height = tmp;
+						newNode.flipped = !newNode.flipped;
 					}
 					
 					if (fitsOnShelf(shelves[i], width, height, i == shelves.length - 1)) {
@@ -203,6 +208,7 @@ class ShelfPacker implements IOccupancy {
 			var tmp = width;
 			width = height;
 			height = tmp;
+			newNode.flipped = !newNode.flipped;
 		}
 		
 		if (canStartNewShelf(height)) {
@@ -267,6 +273,7 @@ class ShelfPacker implements IOccupancy {
 			var tmp = width;
 			width = height;
 			height = tmp;
+			newNode.flipped = !newNode.flipped;
 		}
 		
 		newNode.x = shelf.currentX;
