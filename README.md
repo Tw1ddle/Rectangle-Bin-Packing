@@ -1,6 +1,6 @@
 ![Project logo](screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
 
-2D rectangular bin packing algorithms for the Haxe [bin-packing haxelib](http://lib.haxe.org/p/bin-packing). Try the demo out [in your browser](http://www.samcodes.co.uk/project/rectangle-bin-packing-demo/).
+2D rectangular bin packing algorithms for the Haxe [bin-packing haxelib](http://lib.haxe.org/p/bin-packing). Try the demo out [in your browser](http://samcodes.itch.io/rectangle-bin-packer).
 	
 Based on the public domain C++ bin packing implementations by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
 
@@ -11,7 +11,7 @@ Based on the public domain C++ bin packing implementations by [Jukka Jylänki](h
 
 ## Usage ##
 
-Try the [demo](http://www.samcodes.co.uk/project/rectangle-bin-packing-demo/) in your browser, or refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
+Try the [demo](http://samcodes.itch.io/rectangle-bin-packer) in your browser, or refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
 
 Basic usage example:
 
