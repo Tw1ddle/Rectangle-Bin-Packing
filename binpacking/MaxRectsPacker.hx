@@ -70,8 +70,7 @@ class MaxRectsPacker implements IOccupancy {
 			usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
 		}
 		
-		var totalArea:Float = binWidth * binHeight;
-		return usedSurfaceArea / totalArea;
+		return usedSurfaceArea / (binWidth * binHeight);
 	}
 	
 	private function scoreRect(width:Int, height:Int, method:FreeRectChoiceHeuristic): { rect:Rect, primaryScore: Int, secondaryScore: Int } {

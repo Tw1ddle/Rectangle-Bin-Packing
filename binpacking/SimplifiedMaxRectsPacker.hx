@@ -20,12 +20,14 @@ class SimplifiedMaxRectsPacker implements IOccupancy {
 	private var binWidth:Float;
 	private var binHeight:Float;
 	private var freeRectangles:Array<Rect>;
+	private var areaUsed:Float;
 		
 	public function new(width:Float, height:Float):Void {
-		freeRectangles = new Array<Rect>();
-		freeRectangles.push(new Rect(0, 0, width, height));
 		binWidth = width;
 		binHeight = height;
+		freeRectangles = new Array<Rect>();
+		freeRectangles.push(new Rect(0, 0, width, height));
+		areaUsed = 0;
 	}
 	
 	public function insert(width:Float, height:Float):Rect {
@@ -70,7 +72,8 @@ class SimplifiedMaxRectsPacker implements IOccupancy {
 			}
 		}
 		
-		if(bestNode.height != 0) {
+		if (bestNode.height != 0) {
+			areaUsed += bestNode.width * bestNode.height;
 			return bestNode;
 		} else {
 			return null;
@@ -150,7 +153,11 @@ class SimplifiedMaxRectsPacker implements IOccupancy {
 	}
 	
 	public function occupancy():Float {
-		return 0.0;
+		if (areaUsed == 0) {
+			return 0;
+		}
+		
+		return areaUsed / (binWidth * binHeight);
 	}
 	
 	private inline function isContainedIn(a:Rect, b:Rect):Bool {
