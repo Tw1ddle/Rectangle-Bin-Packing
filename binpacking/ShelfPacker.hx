@@ -28,10 +28,10 @@ class Shelf {
 
 // Simple but bad packing efficiency bin packing algorithm
 class ShelfPacker implements IOccupancy {	
-	private var binWidth:Int;
-	private var binHeight:Int;
-	private var currentY:Int;
-	private var usedSurfaceArea:Int;
+	public var binWidth(default, null):Int;
+	public var binHeight(default, null):Int;
+	public var currentY(default, null):Int;
+	private var usedSurfaceArea(default, null):Int;
 	private var useWasteMap:Bool;
 	private var wasteMap:GuillotinePacker;
 	private var shelves:Array<Shelf>;

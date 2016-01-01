@@ -23,8 +23,8 @@ private class SkylineNode {
 }
 
 class SkylinePacker implements IOccupancy {
-	private var binWidth:Int;
-	private var binHeight:Int;
+	public var binWidth(default, null):Int;
+	public var binHeight(default, null):Int;
 	private var usedSurfaceArea:Int;
 	private var useWasteMap:Bool;
 	private var wasteMap:GuillotinePacker;

@@ -3,8 +3,8 @@ package binpacking;
 // Naive shelf bin packing algorithm
 // First-fit implementation that packs poorly in most scenarios
 class NaiveShelfPacker implements IOccupancy {
-	private var binWidth:Int;
-	private var binHeight:Int;
+	public var binWidth(default, null):Int;
+	public var binHeight(default, null):Int;
 	private var shelfHeight:Int;
 	private var currentX:Int;
 	private var currentY:Int;

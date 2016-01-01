@@ -17,10 +17,10 @@ package binpacking;
 //		- Remove NME dependency, refactoring
 
 class SimplifiedMaxRectsPacker implements IOccupancy {
-	private var binWidth:Float;
-	private var binHeight:Float;
-	private var freeRectangles:Array<Rect>;
-	private var areaUsed:Float;
+	public var binWidth(default, null):Float;
+	public var binHeight(default, null):Float;
+	public var freeRectangles(default, null):Array<Rect>;
+	private var areaUsed(default, null):Float;
 		
 	public function new(width:Float, height:Float):Void {
 		binWidth = width;

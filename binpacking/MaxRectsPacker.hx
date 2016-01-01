@@ -9,10 +9,10 @@ enum FreeRectChoiceHeuristic {
 }
 
 class MaxRectsPacker implements IOccupancy {
-	private var binWidth:Int;
-	private var binHeight:Int;
-	private var usedRectangles:Array<Rect> = new Array<Rect>();
-	private var freeRectangles:Array<Rect> = new Array<Rect>();
+	public var binWidth(default, null):Int;
+	public var binHeight(default, null):Int;
+	public var usedRectangles(default, null):Array<Rect> = new Array<Rect>();
+	public var freeRectangles(default, null):Array<Rect> = new Array<Rect>();
 	
 	public function new(width:Int = 0, height:Int = 0) {
 		binWidth = width;
