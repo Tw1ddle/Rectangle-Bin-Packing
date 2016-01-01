@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["cross","haxe","utility","game","tool"],
 	"description": "2D rectangle bin packing algorithms",
-	"version": "1.0.0",
-	"releasenote": "Initial release",
+	"version": "1.0.1",
+	"releasenote": "Make private members public/readonly for convenience",
 	"contributors": ["samcodes"],
 	"dependencies": {"sure": ""}
 }
