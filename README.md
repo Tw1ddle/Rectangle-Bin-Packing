@@ -1,4 +1,4 @@
-![Project logo](https://github.com/Tw1ddle/Rectangle-Bin-Packing/screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
+![Project logo](https://github.com/Tw1ddle/Rectangle-Bin-Packing/blob/master/screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/Tw1ddle/Rectangle-Bin-Packing/blob/master/LICENSE)
 
@@ -54,9 +54,9 @@ Or add it to your ```Project.xml```:
 ## Screenshots ##
 Screenshots of the [demo](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/):
 
-![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/screenshots/screenshot1.png?raw=true "Bin Packing Algorithms screenshot 1")
+![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/blob/master/screenshots/screenshot1.png?raw=true "Bin Packing Algorithms screenshot 1")
 
-![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/screenshots/screenshot2.png?raw=true "Bin Packing Algorithms screenshot 2")
+![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/blob/master/screenshots/screenshot2.png?raw=true "Bin Packing Algorithms screenshot 2")
 
 ## Notes ##
 * The algorithms in this haxelib are ported from public domain C++ code by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
