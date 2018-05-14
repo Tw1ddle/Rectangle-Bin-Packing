@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["cross","haxe","utility","game","tool"],
 	"description": "2D rectangle bin packing algorithms",
-	"version": "1.0.1",
-	"releasenote": "Make private members public/readonly for convenience",
+	"version": "1.0.2",
+	"releasenote": "MaxRectsPacker can now disallow flipping of rects, other minor additions",
 	"contributors": ["samcodes"],
 	"dependencies": {"sure": ""}
 }

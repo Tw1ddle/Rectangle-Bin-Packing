@@ -11,12 +11,14 @@ enum FreeRectChoiceHeuristic {
 class MaxRectsPacker implements IOccupancy {
 	public var binWidth(default, null):Int;
 	public var binHeight(default, null):Int;
+	public var binAllowFlip(default, null):Bool;
 	public var usedRectangles(default, null):Array<Rect> = new Array<Rect>();
 	public var freeRectangles(default, null):Array<Rect> = new Array<Rect>();
 	
-	public function new(width:Int = 0, height:Int = 0) {
+	public function new(width:Int = 0, height:Int = 0, allowFlip:Bool = true) {
 		binWidth = width;
 		binHeight = height;
+		binAllowFlip = allowFlip;
 		
 		var n = new Rect(0, 0, width, height);
 		
@@ -113,23 +115,6 @@ class MaxRectsPacker implements IOccupancy {
 		return { rect: newNode, primaryScore: score1, secondaryScore: score2 };
 	}
 	
-	private function placeRect(node:Rect):Void {
-		var numRectanglesToProcess = freeRectangles.length;
-		
-		var i = 0;
-		while (i < numRectanglesToProcess) {
-			if (splitFreeNode(freeRectangles[i], node)) {
-				freeRectangles.splice(i, 1);
-				--numRectanglesToProcess;
-				continue;
-			}
-			i++;
-		}
-		
-		pruneFreeList();
-		usedRectangles.push(node);
-	}
-	
 	private function contactPointScoreNode(x:Int, y:Int, width:Int, height:Int):Int {
 		var score = 0;
 		
@@ -170,7 +155,7 @@ class MaxRectsPacker implements IOccupancy {
 				bestX = Std.int(freeRectangles[i].x);
 			}
 			
-			if (freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
+			if (binAllowFlip && freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
 				var topSideY = Std.int(freeRectangles[i].y + height);
 				
 				bestNode.x = freeRectangles[i].x;
@@ -208,7 +193,7 @@ class MaxRectsPacker implements IOccupancy {
 				}
 			}
 			
-			if (freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
+			if (binAllowFlip && freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
 				var flippedLeftoverHoriz = Math.abs(freeRectangles[i].width - height);
 				var flippedLeftoverVert = Math.abs(freeRectangles[i].height - width);
 				var flippedShortSideFit = Math.min(flippedLeftoverHoriz, flippedLeftoverVert);
@@ -252,7 +237,7 @@ class MaxRectsPacker implements IOccupancy {
 				}
 			}
 			
-			if (freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
+			if (binAllowFlip && freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
 				var leftoverHoriz = Math.abs(freeRectangles[i].width - width);
 				var leftoverVert = Math.abs(freeRectangles[i].height - height);
 				var shortSideFit = Math.min(leftoverHoriz, leftoverVert);
@@ -297,7 +282,7 @@ class MaxRectsPacker implements IOccupancy {
 				}
 			}
 
-			if (freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
+			if (binAllowFlip && freeRectangles[i].width >= height && freeRectangles[i].height >= width) {
 				var leftoverHoriz = Math.abs(freeRectangles[i].width - height);
 				var leftoverVert = Math.abs(freeRectangles[i].height - width);
 				var shortSideFit = Math.min(leftoverHoriz, leftoverVert);
