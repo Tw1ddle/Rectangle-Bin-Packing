@@ -27,7 +27,7 @@ class Shelf {
 }
 
 // Simple but bad packing efficiency bin packing algorithm
-class ShelfPacker implements IOccupancy {	
+class ShelfPacker implements IOccupancy {
 	public var binWidth(default, null):Int;
 	public var binHeight(default, null):Int;
 	public var currentY(default, null):Int;
@@ -36,7 +36,7 @@ class ShelfPacker implements IOccupancy {
 	private var wasteMap:GuillotinePacker;
 	private var shelves:Array<Shelf>;
 	
-	public function new(width:Int = 0, height:Int = 0, useWasteMap:Bool = false) {		
+	public function new(width:Int = 0, height:Int = 0, useWasteMap:Bool = false) {
 		binWidth = width;
 		binHeight = height;
 		currentY = 0;
@@ -51,7 +51,7 @@ class ShelfPacker implements IOccupancy {
 		}
 	}
 	
-	public function insert(width:Int, height:Int, heuristic:ShelfChoiceHeuristic):Rect {		
+	public function insert(width:Int, height:Int, heuristic:ShelfChoiceHeuristic):Rect {
 		if (useWasteMap) {
 			var node = wasteMap.insert(width, height, true, GuillotineFreeRectChoiceHeuristic.BestShortSideFit, GuillotineSplitHeuristic.MaximizeArea);
 			
@@ -259,7 +259,7 @@ class ShelfPacker implements IOccupancy {
 		return ((shelf.currentX + width <= binWidth && height <= shelfHeight) || (shelf.currentX + height <= binWidth && width <= shelfHeight));
 	}
 	
-	private function shouldRotateToShelf(shelf:Shelf, width:Int, height:Int):Bool {		
+	private function shouldRotateToShelf(shelf:Shelf, width:Int, height:Int):Bool {
 		if ((width > height && width > binWidth - shelf.currentX) || (width > height && width < shelf.height) || (width < height && height > shelf.height && height <= binWidth - shelf.currentX)) {
 			return true;
 		}

@@ -85,7 +85,7 @@ class SkylinePacker implements IOccupancy {
 		return fUsedSurfaceArea / (binWidth * binHeight);
 	}
 	
-	private function insertBottomLeft(width:Int, height:Int):Rect {		
+	private function insertBottomLeft(width:Int, height:Int):Rect {
 		var data = findPositionForNewNodeBottomLeft(width, height);
 		var bestHeight = data.bestHeight;
 		var bestWidth = data.bestWidth;
@@ -300,7 +300,7 @@ class SkylinePacker implements IOccupancy {
 		var rectLeft = skyline[skylineNodeIndex].x;
 		var rectRight = rectLeft + width;
 		
-		while (skylineNodeIndex < skyline.length && skyline[skylineNodeIndex].x < rectRight) {			
+		while (skylineNodeIndex < skyline.length && skyline[skylineNodeIndex].x < rectRight) {
 			if (skyline[skylineNodeIndex].x >= rectRight || skyline[skylineNodeIndex].x + skyline[skylineNodeIndex].width <= rectLeft) {
 				break;
 			}

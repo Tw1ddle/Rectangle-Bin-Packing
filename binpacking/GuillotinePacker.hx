@@ -30,7 +30,7 @@ class GuillotinePacker implements IOccupancy {
 	private var disjointRects:DisjointRectCollection = new DisjointRectCollection();
 	#end
 	
-	public function new(width:Int = 0, height:Int = 0) {		
+	public function new(width:Int = 0, height:Int = 0) {
 		binWidth = width;
 		binHeight = height;
 		

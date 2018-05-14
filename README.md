@@ -1,7 +1,7 @@
 ![Project logo](screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
 
-2D rectangular bin packing algorithms for the Haxe [bin-packing haxelib](http://lib.haxe.org/p/bin-packing). Try the demo out [in your browser](http://samcodes.itch.io/rectangle-bin-packer).
-	
+2D rectangular bin packing algorithms for the Haxe [bin-packing haxelib](http://lib.haxe.org/p/bin-packing). Run the demo [in your browser](https://tw1ddle.github.io/Rectangle-Bin-Packing-Demo/index.html).
+
 Based on the public domain C++ bin packers by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
 
 ## Features ##
@@ -11,7 +11,7 @@ Based on the public domain C++ bin packers by [Jukka Jylänki](https://github.co
 
 ## Usage ##
 
-Try the [demo](http://samcodes.itch.io/rectangle-bin-packer) in your browser, or refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
+Run the [demo](https://tw1ddle.github.io/Rectangle-Bin-Packing-Demo/index.html) in your browser and refer to the [example code](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/).
 
 Basic usage example:
 
@@ -37,7 +37,7 @@ if(rect == null) {
 
 ## Install ##
 
-Get the Haxe library code here or through haxelib.
+Get the Haxe library code here or via haxelib.
 
 Include it in your ```.hxml```
 ```
@@ -52,12 +52,11 @@ Or add it to your ```Project.xml```:
 ## Screenshots ##
 Screenshots of the [demo](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/):
 
-![Screenshot](screenshots/screenshot1.png?raw=true "Bin Packing Algorithms screenshot 1")
+![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/screenshots/screenshot1.png?raw=true "Bin Packing Algorithms screenshot 1")
 
-![Screenshot](screenshots/screenshot2.png?raw=true "Bin Packing Algorithms screenshot 2")
+![Screenshot](https://github.com/Tw1ddle/Rectangle-Bin-Packing-Demo/screenshots/screenshot2.png?raw=true "Bin Packing Algorithms screenshot 2")
 
 ## Notes ##
 * The algorithms in this haxelib are ported from public domain C++ code by [Jukka Jylänki](https://github.com/juj/RectangleBinPack).
 * For details about the algorithms, see Jukka's [blog posts](http://clb.demon.fi/projects/even-more-rectangle-bin-packing) and [paper](http://clb.demon.fi/files/RectangleBinPack.pdf).
-* The haxelib supports every Haxe target, but has not been thoroughly tested or optimized.
 * If you have any questions or suggestions then [get in touch](http://samcodes.co.uk/contact).

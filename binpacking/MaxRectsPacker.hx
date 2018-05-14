@@ -158,7 +158,7 @@ class MaxRectsPacker implements IOccupancy {
 		var bestY = 0x3FFFFFFF;
 		var bestX = 0x3FFFFFFF;
 		
-		for (i in 0...freeRectangles.length) {			
+		for (i in 0...freeRectangles.length) {
 			if (freeRectangles[i].width >= width && freeRectangles[i].height < bestX) {
 				var topSideY = Std.int(freeRectangles[i].y + height);
 				
