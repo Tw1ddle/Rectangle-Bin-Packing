@@ -1,4 +1,6 @@
-![Project logo](screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
+![Project logo](https://github.com/Tw1ddle/Rectangle-Bin-Packing/screenshots/bin_packing_logo.png?raw=true "Bin Packing Algorithms Logo")
+
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/Tw1ddle/Rectangle-Bin-Packing/blob/master/LICENSE)
 
 2D rectangular bin packing algorithms for the Haxe [bin-packing haxelib](http://lib.haxe.org/p/bin-packing). Run the demo [in your browser](https://tw1ddle.github.io/Rectangle-Bin-Packing-Demo/index.html).
 
